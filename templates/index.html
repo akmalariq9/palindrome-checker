@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palindrome Checker</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-light: #e0e4fc;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --success-light: #e6f7fd;
+        --danger: #f72585;
+        --danger-light: #fde6ef;
+        --warning: #ffbe0b;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --border-radius: 12px;
+        --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        color: var(--dark);
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .app-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+      }
+
+      .app-subtitle {
+        color: var(--gray);
+        font-weight: 300;
+        font-size: 1.1rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2.5rem;
+        transition: var(--transition);
+        margin-bottom: 2rem;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-title {
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark);
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        border: 2px solid var(--light-gray);
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        font-family: "Poppins", sans-serif;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+      }
+
+      .btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn:hover {
+        background-color: var(--secondary);
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .result-container {
+        margin-top: 1.5rem;
+        padding: 1.25rem;
+        border-radius: var(--border-radius);
+        animation: fadeIn 0.5s ease;
+        display: flex;
+        align-items: center;
+      }
+
+      .success {
+        background-color: var(--success-light);
+        color: #0a9396;
+        border-left: 4px solid var(--success);
+      }
+
+      .error {
+        background-color: var(--danger-light);
+        color: var(--danger);
+        border-left: 4px solid var(--danger);
+      }
+
+      .result-icon {
+        font-size: 1.75rem;
+        margin-right: 1rem;
+      }
+
+      .history-container {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2rem;
+      }
+
+      .history-title {
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .history-list {
+        list-style: none;
+      }
+
+      .history-item {
+        padding: 1rem;
+        border-bottom: 1px solid var(--light-gray);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: var(--transition);
+      }
+
+      .history-item:last-child {
+        border-bottom: none;
+      }
+
+      .history-item:hover {
+        background-color: var(--light);
+      }
+
+      .history-text {
+        font-weight: 500;
+      }
+
+      .history-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .status-palindrome {
+        background-color: var(--success-light);
+        color: #0a9396;
+      }
+
+      .status-not-palindrome {
+        background-color: var(--danger-light);
+        color: var(--danger);
+      }
+
+      .empty-history {
+        color: var(--gray);
+        text-align: center;
+        padding: 2rem;
+        font-style: italic;
+      }
+
+      footer {
+        margin-top: 3rem;
+        color: var(--gray);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0;
+        }
+
+        .card,
+        .history-container {
+          padding: 1.5rem;
+        }
+
+        .app-title {
+          font-size: 2rem;
+        }
+      }
+
+      .btn#clear-history-btn {
+        background-color: var(--danger);
+        width: auto;
+        padding: 0.5rem 1rem;
+        margin-left: 1rem;
+      }
+
+      .btn#clear-history-btn:hover {
+        background-color: #d11450;
+      }
+
+      @media (max-width: 768px) {
+        .btn#clear-history-btn {
+          margin-left: 0;
+          margin-top: 0.5rem;
+        }
+
+        .history-container > div {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="app-header">
+        <h1 class="app-title">Palindrome Checker</h1>
+        <p class="app-subtitle">
+          Check if your word or phrase reads the same backwards
+        </p>
+      </header>
+
+      <div class="card">
+        <h2 class="card-title">
+          <i class="fas fa-search"></i> Check a Palindrome
+        </h2>
+
+        <form method="POST">
+          <div class="form-group">
+            <label for="input_string">Enter a word or phrase:</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="input_string"
+                name="input_string"
+                value="{{ input_string }}"
+                placeholder="e.g. racecar, madam, noon"
+                required
+                autofocus
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="btn">
+            <i class="fas fa-check"></i> Check Now
+          </button>
+        </form>
+
+        {% if error_message %}
+        <div class="result-container error">
+          <i class="fas fa-exclamation-circle result-icon"></i>
+          <span>{{ error_message }}</span>
+        </div>
+        {% elif result %}
+        <div class="result-container success">
+          <i class="fas {{ result.icon }} result-icon"></i>
+          <span>{{ result.message }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="history-container">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h2 class="history-title">
+            <i class="fas fa-history"></i> Your History
+          </h2>
+          {% if history %}
+          <button
+            id="clear-history-btn"
+            class="btn"
+            style="width: auto; padding: 0.5rem 1rem"
+          >
+            <i class="fas fa-trash"></i> Clear History
+          </button>
+          {% endif %}
+        </div>
+
+        {% if history %}
+        <ul class="history-list">
+          {% for item in history %}
+          <li class="history-item" style="animation: slideIn 0.3s ease-in-out">
+            <span class="history-text">{{ item.text }}</span>
+            <span
+              class="history-status {% if item.is_palindrome %}status-palindrome{% else %}status-not-palindrome{% endif %}"
+            >
+              {% if item.is_palindrome %}
+              <i class="fas fa-check-circle"></i> Palindrome {% else %}
+              <i class="fas fa-times-circle"></i> Not Palindrome {% endif %}
+            </span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-history">
+          <i
+            class="fas fa-clock"
+            style="font-size: 2rem; margin-bottom: 1rem"
+          ></i>
+          <p>Your checked palindromes will appear here</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <footer>
+        <p>
+          Palindrome: a word, phrase, or sequence that reads the same backward
+          as forward
+        </p>
+        <p style="margin-top: 0.5rem">
+          © 2025 Palindrome Checker - Otomata | Made by Ihsan, Akmal, Adam, and
+          Rafif
+        </p>
+      </footer>
+    </div>
+  </body>
+  <script>
+    document
+      .getElementById("clear-history-btn")
+      ?.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        try {
+          const response = await fetch("/clear-history", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (response.status === 204) {
+            window.location.reload();
+          }
+        } catch (error) {
+          console.error("Error clearing history:", error);
+        }
+      });
+  </script>
+</html>
